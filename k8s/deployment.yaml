@@ -12,8 +12,6 @@ spec:
     metadata:
       labels:
         app: mi-app
-      annotations:
-        pipeline-execution: "$EXECUTION_ID"
     spec:
       containers:
         - name: mi-app
