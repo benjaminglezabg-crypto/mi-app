@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: mi-app
-          image: "$IMAGE_URI@$IMAGE_DIGEST"
+          image: 597080429808.dkr.ecr.us-east-1.amazonaws.com/mi-app:latest
           ports:
             - containerPort: 80
