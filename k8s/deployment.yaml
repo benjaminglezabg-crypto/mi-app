@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: mi-app
-          image: nginx:alpine
+          image: "$IMAGE_URI@$IMAGE_DIGEST"
           ports:
             - containerPort: 80
