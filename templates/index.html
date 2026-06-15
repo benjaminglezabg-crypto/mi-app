@@ -1,1 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mi App ECS RDS</title>
+</head>
+<body>
+    <h1>Hola desde mi contenedor ECS</h1>
 
+    <form action="/save" method="POST">
+        <label>Name:</label>
+        <input type="text" name="name" required>
+
+        <br><br>
+
+        <label>Message:</label>
+        <input type="text" name="message" required>
+
+        <br><br>
+
+        <button type="submit">Save to RDS</button>
+    </form>
+</body>
+</html>
