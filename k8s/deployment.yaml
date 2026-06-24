@@ -3,18 +3,65 @@ kind: Deployment
 metadata:
   name: mi-app
   namespace: default
+
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: mi-app
+
   template:
     metadata:
       labels:
         app: mi-app
+
     spec:
       containers:
         - name: mi-app
-          image: 597080429808.dkr.ecr.us-east-1.amazonaws.com/mi-app:latest
+          image: IMAGE_URI
+          imagePullPolicy: Always
+
           ports:
-            - containerPort: 80
+            - containerPort: 8000
+
+          env:
+            - name: DB_HOST
+              value: "TU-ENDPOINT-RDS"
+
+            - name: DB_NAME
+              value: "myappdb"
+
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mi-app-db-secret
+                  key: username
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mi-app-db-secret
+                  key: password
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "250m"
+              memory: "512Mi"
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 20
