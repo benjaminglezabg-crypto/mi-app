@@ -196,6 +196,8 @@ resource "kubernetes_service_v1" "mi_app" {
     type = "LoadBalancer"
   }
 
+  wait_for_load_balancer = false
+
   depends_on = [
     kubernetes_deployment_v1.mi_app
   ]
