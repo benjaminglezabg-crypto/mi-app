@@ -2,11 +2,21 @@ version: 0.2
 
 env:
   variables:
+    AWS_DEFAULT_REGION: "us-east-1"
+    ECR_REPOSITORY: "mi-app"
+    EKS_CLUSTER_NAME: "mi-eks-fargate"
     TF_VERSION: "1.9.8"
+    DB_NAME: "myappdb"
+
+  secrets-manager:
+    DB_USERNAME: "mi-app-rds-secret:username"
+    DB_PASSWORD: "mi-app-rds-secret:password"
+    DB_HOST: "mi-app-rds-secret:host"
 
 phases:
   install:
     commands:
+      - echo "Installing Terraform..."
       - curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip"
       - mkdir -p /tmp/terraform-bin
       - unzip -o /tmp/terraform.zip -d /tmp/terraform-bin
@@ -16,10 +26,23 @@ phases:
 
   pre_build:
     commands:
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECR_REPOSITORY
+      - IMAGE_TAG="destroy-placeholder"
       - cd terraform
       - terraform init -reconfigure
 
   build:
     commands:
-      - terraform plan -destroy -out=destroyplan
+      - |
+        terraform plan -destroy \
+          -var="aws_region=$AWS_DEFAULT_REGION" \
+          -var="eks_cluster_name=$EKS_CLUSTER_NAME" \
+          -var="ecr_repository_url=$REPOSITORY_URI" \
+          -var="image_tag=$IMAGE_TAG" \
+          -var="db_host=$DB_HOST" \
+          -var="db_name=$DB_NAME" \
+          -var="db_username=$DB_USERNAME" \
+          -var="db_password=$DB_PASSWORD" \
+          -out=destroyplan
       - terraform apply -auto-approve destroyplan
