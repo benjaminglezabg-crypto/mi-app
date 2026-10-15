@@ -1,33 +1,11 @@
-resource "aws_ecs_service" "app" {
-  name = var.ecs_service_name
+ecs_cluster_name       = "ecs-network-dev-cluster"
+task_definition_family = "ecs-network-dev-task"
+ecs_service_name       = "ecs-network-dev-service"
 
-  cluster         = data.aws_ecs_cluster.main.arn
-  task_definition = data.aws_ecs_task_definition.app.arn
+vpc_id                 = "vpc-xxxxxxxx"
+ecs_security_group_id   = "sg-xxxxxxxx"
 
-  desired_count = 1
-  launch_type   = "FARGATE"
+target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:ACCOUNT_ID:targetgroup/xxxxx/xxxxx"
 
-  platform_version = "LATEST"
-
-  network_configuration {
-    subnets = data.aws_subnets.private.ids
-
-    security_groups = [
-      data.aws_security_group.ecs.id
-    ]
-
-    assign_public_ip = false
-  }
-
-  load_balancer {
-    target_group_arn = data.aws_lb_target_group.app.arn
-    container_name   = var.container_name
-    container_port   = var.container_port
-  }
-
-  lifecycle {
-    ignore_changes = [
-      task_definition
-    ]
-  }
-}
+container_name = "app"
+container_port = 8000
