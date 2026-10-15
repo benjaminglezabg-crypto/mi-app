@@ -2,10 +2,6 @@ data "aws_ecs_cluster" "main" {
   cluster_name = var.ecs_cluster_name
 }
 
-data "aws_ecs_task_definition" "app" {
-  task_definition = var.task_definition_family
-}
-
 data "aws_vpc" "main" {
   id = var.vpc_id
 }
