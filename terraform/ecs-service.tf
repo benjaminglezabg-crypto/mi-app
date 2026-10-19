@@ -1,8 +1,8 @@
 resource "aws_ecs_service" "app" {
   name = var.ecs_service_name
 
-  cluster         = data.aws_ecs_cluster.main.arn
-  task_definition = task_definition = aws_ecs_task_definition.app.arn
+  cluster = data.aws_ecs_cluster.main.arn
+  task_definition = aws_ecs_task_definition.app.arn
 
   desired_count = 1
   launch_type   = "FARGATE"
