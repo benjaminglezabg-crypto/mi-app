@@ -10,17 +10,17 @@ resource "aws_ecs_service" "app" {
   platform_version = "LATEST"
 
   network_configuration {
-    subnets = data.aws_subnets.private.ids
+    subnets = var.private_subnet_ids
 
     security_groups = [
-      data.aws_security_group.ecs.id
+      var.ecs_security_group_id
     ]
 
     assign_public_ip = false
   }
 
   load_balancer {
-    target_group_arn = data.aws_lb_target_group.app.arn
+    target_group_arn = var.target_group_arn
     container_name   = var.container_name
     container_port   = var.container_port
   }
