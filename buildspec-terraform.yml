@@ -7,10 +7,11 @@ env:
 phases:
   install:
     commands:
-      - echo "Installing Terraform..."
-      - curl -fsSLo terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip"
-      - unzip -o terraform.zip
-      - install terraform /usr/local/bin/terraform
+      - echo "Installing Terraform ${TF_VERSION}..."
+      - curl -fsSLo /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip"
+      - mkdir -p /tmp/terraform-install
+      - unzip -o /tmp/terraform.zip -d /tmp/terraform-install
+      - install /tmp/terraform-install/terraform /usr/local/bin/terraform
       - terraform version
 
   pre_build:
@@ -26,4 +27,4 @@ phases:
 
   post_build:
     commands:
-      - echo "Terraform completed"
+      - echo "Terraform completed successfully"
