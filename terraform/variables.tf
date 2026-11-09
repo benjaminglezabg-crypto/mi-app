@@ -46,3 +46,7 @@ variable "task_role_arn" {
 variable "ecr_repository_url" {
   type = string
 }
+variable "private_subnet_ids" {
+  type        = list(string)
+  description = "Private subnet IDs used by the ECS Fargate service"
+}
